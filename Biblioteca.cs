@@ -137,7 +137,7 @@ namespace csharp_biblioteca_db
                     string nome;
                     string cognome;
                     Console.WriteLine("Inserisci nome dell'autore :");
-                    nome = Console.ReadLine();
+                    nome =Console.ReadLine();
 
                     Console.WriteLine("Inserisci cognome dell'autore : ");
                     cognome = Console.ReadLine();
@@ -151,6 +151,7 @@ namespace csharp_biblioteca_db
                     DB.StampaLibriAutori(lista);
 
                     Console.WriteLine("---------------------");
+
 
                     break;
 

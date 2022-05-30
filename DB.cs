@@ -94,7 +94,7 @@ namespace csharp_biblioteca_db
             if (conn == null)
                 throw new Exception("Unable to connect to the dabatase");
             
-            string cmd = "UPDATE Codice_unico SET Codice = Codice + 1 OUTPUT INSERTED.Codice";
+            string cmd = "UPDATE CodiceUnico SET Codice = Codice + 1 OUTPUT INSERTED.Codice";
             long id;
             using (SqlCommand select = new SqlCommand(cmd, conn))
             {
@@ -666,20 +666,22 @@ namespace csharp_biblioteca_db
         }
 
 
-        internal static void StampaLibriAutori(List<List<string>>lista) 
+        internal static void StampaLibriAutori(List<List<string>> lista) 
         {
-            if (lista.Count == 0)
+            // nel caso in cui le query non ritornano alcun valore, mi ritorna il messaggio
+            // che non ci sono documenti
+
+            if (lista.Count == 0) 
             {
                 Console.WriteLine();
                 Console.WriteLine("Non ci sono documenti con la tua ricerca");
                 Console.WriteLine("----------------------------------------");
             }
 
-
-            foreach (var item in lista)
+            foreach (var item in lista) 
             {
                 
-                    Console.WriteLine(string.Format(@"Codice Libro: {0},Numero Pagine: {1},Titolo: {2},Settore: {3}, 
+                    Console.WriteLine(string.Format(@"Codice Libro: {0},Numero Pagine: {1},Titolo: {2}, Settore: {3}, 
                         Stato:{4}, Scaffale {5}, Codice Autore {6}, Nome Autore {7}, Cognome Autore {8}, Mail Autore {9} ",
                         item[0], item[1], item[3], item[4], item[5], item[7], item[8], item[11], item[12],item[13]));
 
@@ -703,8 +705,11 @@ namespace csharp_biblioteca_db
                                         where Autori.Nome = '{0}' and Autori.Cognome = '{1}'",nome, cognome);
 
 
+
             using (SqlCommand select = new SqlCommand(cmd, conn))
             {
+                
+
                 using (SqlDataReader reader = select.ExecuteReader())
 
                 {
@@ -740,6 +745,37 @@ namespace csharp_biblioteca_db
 
 
             return data;
+
+        }
+
+        internal static int EmailClientiAdd(string nome, string email)
+        {
+            var conn = DB.Connect();
+            if (conn == null)
+            {
+                throw new Exception("Non è possibile connettersi");
+            }
+
+            var cmd = String.Format($"insert into Cliente (nomeclienti, email) values ('{nome}','{email}')");
+
+            using (SqlCommand insert = new SqlCommand(cmd, conn))
+            {
+                try
+                {
+                    var numrows = insert.ExecuteNonQuery();
+                    return numrows;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    return 0;
+
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
 
         }
 
